@@ -1,0 +1,16 @@
+{% extends 'bootstrap/base.html' %}
+
+
+
+
+
+{% block title%}{{ user.first_name }} {{user.last_name}} {% endblock %}
+
+{% block content %}
+
+<h1>{{ user.first_name }} {{user.last_name}}</h1>
+<img src="{{user.image_url}}">
+<a href="/edit/{{user.id}}"><button>Edit</button></a>
+<a href="/delete/{{user.id}}"><button>Delete</button></a>
+
+{% endblock %}
