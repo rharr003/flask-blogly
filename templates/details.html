@@ -12,5 +12,12 @@
 <img src="{{user.image_url}}">
 <a href="/edit/{{user.id}}"><button>Edit</button></a>
 <a href="/delete/{{user.id}}"><button>Delete</button></a>
+<h2>Posts:</h2>
+<ul>
+{% for post in user.posts %}
+    <li><a href="/posts/{{post.id}}">{{ post.title }}</a></li>
 
+{% endfor %}
+</ul>
+<a href="/addpost/{{user.id}}"><button>Add Post</button></a>
 {% endblock %}

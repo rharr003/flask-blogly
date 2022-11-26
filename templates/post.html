@@ -1,0 +1,14 @@
+{% extends 'bootstrap/base.html' %}
+
+
+{% block title %}{{post.title}}{% endblock %}
+
+
+{% block content %}
+<h1>{{post.title}}</h1>
+<h4>Posted on {{post.date}}</h4>
+<p>{{post.content}}</p>
+<a href="/edit/post/{{post.id}}"><button>edit</button></a>
+<a href="/delete/post/{{post.id}}"><button>delete</button></a>
+
+{% endblock %}

@@ -1,5 +1,5 @@
 from flask import Flask, redirect, request, render_template, session, url_for
-from models import db, connect_db, User
+from models import db, connect_db, User, Post
 from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
@@ -39,7 +39,8 @@ def details(user_id):
 
 @app.route('/delete/<int:user_id>')
 def delete(user_id):
-    User.query.filter_by(id=user_id).delete()
+    user = User.query.filter_by(id=user_id).first()
+    db.session.delete(user)
     db.session.commit()
     return redirect(url_for('home'))
 
@@ -48,5 +49,37 @@ def edit(user_id):
     user = User.query.get(user_id)
     return render_template('edit.html', user=user)
 
+@app.route('/addpost/<int:user_id>', methods=['GET', 'POST'])
+def add_post(user_id):
+    user = User.query.get(user_id)
+    if request.method == 'POST':
+        title = request.form['title']
+        content = request.form['content']
+        post = Post(title=title, content=content, user_id=user.id)
+        db.session.add(post)
+        db.session.commit()
+        return redirect(f'/{user.id}')
+    return render_template('addpost.html', user=user)
 
+@app.route('/posts/<int:post_id>')
+def show_post(post_id):
+    post = Post.query.get(post_id)
+    return render_template('post.html', post=post)
+
+@app.route('/delete/post/<int:post_id>')
+def delete_post(post_id):
+    post = Post.query.get(post_id)
+    db.session.delete(post)
+    db.session.commit()
+    return redirect('/')
+
+@app.route('/edit/post/<int:post_id>', methods=['GET', 'POST'])
+def edit_post(post_id):
+    post = Post.query.get(post_id)
+    if request.method == 'POST':
+        post.title = request.form['title']
+        post.content = request.form['content']
+        db.session.commit()
+        return redirect(f'/posts/{post.id}')
+    return render_template('editpost.html', post=post)
 app.run(debug=True)
