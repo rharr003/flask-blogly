@@ -1,5 +1,5 @@
 from flask import Flask, redirect, request, render_template, session, url_for
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, Tag
 from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
@@ -52,14 +52,19 @@ def edit(user_id):
 @app.route('/addpost/<int:user_id>', methods=['GET', 'POST'])
 def add_post(user_id):
     user = User.query.get(user_id)
+    tags = Tag.query.all()
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
         post = Post(title=title, content=content, user_id=user.id)
+        tags = request.form.getlist('tag')
+        for t in tags:
+            tag = Tag.query.get(t)
+            post.tags.append(tag)
         db.session.add(post)
         db.session.commit()
         return redirect(f'/{user.id}')
-    return render_template('addpost.html', user=user)
+    return render_template('addpost.html', user=user, tags=tags)
 
 @app.route('/posts/<int:post_id>')
 def show_post(post_id):
@@ -82,4 +87,28 @@ def edit_post(post_id):
         db.session.commit()
         return redirect(f'/posts/{post.id}')
     return render_template('editpost.html', post=post)
+
+@app.route('/tags')
+def show_tags():
+    tags = Tag.query.all()
+    return render_template('tag.html', tags=tags)
+
+@app.route('/addtag', methods=['GET', 'POST'])
+def add_tag():
+    if request.method == 'POST':
+        tag = Tag(name=request.form['name'])
+        db.session.add(tag)
+        db.session.commit()
+        return redirect('/tags')
+    return render_template('addtag.html')
+
+@app.route('/tag/<int:tag_id>', methods=['GET', 'POST'])
+def edit_tag(tag_id):
+    tag = Tag.query.get(tag_id)
+    if request.method == 'POST':
+        tag.name = request.form['name']
+        db.session.add(tag)
+        db.session.commit()
+        return redirect('/tags')
+    return render_template('edittag.html', tag=tag)
 app.run(debug=True)

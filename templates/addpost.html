@@ -14,8 +14,14 @@
     <label>Content:</label>
     <input type="text" name="content" required />
     </div>
+    {% for tag in tags %}
+        <div>
+            <label>{{tag.name}}</label>
+            <input type="checkbox" value="{{tag.id}}" name="tag" />
+        </div>
+    {% endfor %}
     <button type="submit">add</button>
-    <a href="/details/{{user.id}}"><button>cancel</button></a>
 </form>
+    <a href="/{{user.id}}"><button>cancel</button></a>
 
 {% endblock %}

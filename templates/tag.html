@@ -1,0 +1,14 @@
+{% extends 'bootstrap/base.html' %}
+
+
+{% block title %}Tags{% endblock %}
+
+{% block content %}
+<h1>Tags:</h1>
+<ul>
+    {% for tag in tags %}
+    <a href="/tag/{{tag.id}}"><li>{{tag.name}}</li></a>
+    {% endfor %}
+</ul>
+<a href="/addtag"><button>Add Tag</button></a>
+{% endblock %}

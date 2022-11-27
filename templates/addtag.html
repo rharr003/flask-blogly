@@ -1,0 +1,17 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}Add Tag{% endblock %}
+
+
+{% block content %}
+
+<form action="/addtag" method="post">
+    <div>
+        <label>Tag Name:</label>
+        <input type="text" name="name" required />
+    </div>
+    <button type="submit">add</button>
+    <a href="/tags"><button>cancel</button></a>
+</form>
+
+{% endblock %}
